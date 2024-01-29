@@ -98,11 +98,21 @@ def get_spatial_quantiles_targets(test_function):
 def fetch_data(data_dir, n_runs):
     L = []
     for i in range(n_runs):
-        sub_path = os.path.join(data_dir, 'data_{}.npy'.format(i))
+        if os.path.exists(os.path.join(data_dir, str(i), "history.csv")):
+            sub_path = os.path.join(data_dir, str(i), "history.csv")
 
-        data = np.load(sub_path)[:, -1]
+            data = pd.read_csv(sub_path).values[:, -1]
 
-        L.append(data)
+            L.append(data)
+
+            if i >= 29:
+                break
+        else:
+            sub_path = os.path.join(data_dir, 'data_{}.npy'.format(i))
+
+            data = np.load(sub_path)[:, -1]
+
+            L.append(data)
 
     return L
 
@@ -129,6 +139,8 @@ def get_cummin_averages(data_dir, n_runs, max_f_evals):
 
 def get_format_data(data_dir, targets, max_f_evals, n_runs):
     runs_data = fetch_data(data_dir, n_runs)
+
+    #print(runs_data)
 
     props_reached = []
     averaged_reached_means = []
@@ -170,6 +182,9 @@ def plotter(
 
     x_array, targets = get_spatial_quantiles_targets(test_function)
 
+    print(x_array)
+    print(targets)
+
     averages = {k: get_format_data(palette[k][0], targets, max_f_evals, n_runs)[1] for k in palette.keys()}
     props = {k: get_format_data(palette[k][0], targets, max_f_evals, n_runs)[0] for k in palette.keys()}
 
@@ -210,6 +225,8 @@ def plotter(
 
     ax2.invert_xaxis()
     ax2.semilogx()
+
+    ax2.legend()
 
     plt.tight_layout()
 
