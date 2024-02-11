@@ -4,13 +4,17 @@ from matplotlib import interactive
 import gpmp as gp
 import gpmpcontrib as gpc
 import gpmpcontrib.optim.expectedimprovement as ei
-import lhsmdu
 import sys
 import os
 import gpmpcontrib.optim.test_problems as test_problems
 import traceback
+from numpy.random import SeedSequence, default_rng
+from utils.does.designs import maximinlhs
 
 assert gp.num._gpmp_backend_ == "torch", "{} is used, please install Torch.".format(gp.num._gpmp_backend_)
+
+# Hard coded, for safety.
+n_runs_max = 1000
 
 # Settings default values and types for different options
 env_options = {
@@ -34,12 +38,23 @@ env_options = {
     "SMC_METHOD": ("step_with_possible_restart", str),
 }
 
+# Rngs Definition
+def get_rng(i, n_runs_max, entropy=42):
+    assert i <= n_runs_max - 1, (n_runs_max, i)
+
+    ss = SeedSequence(entropy)
+
+    child_seeds = ss.spawn(n_runs_max)
+    streams = [default_rng(s) for s in child_seeds]
+
+    return streams[i]
 
 # Initialization Function
 def initialize_optimization(env_options):
     options = {}
     crit_optim_options = {}
-    ei_options = {"mh_params": {}}
+    ei_options = {}
+    smc_options = {"mh_params": {}}
     # Loop through the environment options
     for key, (default, value_type) in env_options.items():
         value = os.getenv(key, default)
@@ -74,9 +89,12 @@ def initialize_optimization(env_options):
             elif key in [
                 "MH_STEPS",
             ]:
-                ei_options["mh_params"][key.lower()] = value_type(value)
+                smc_options["mh_params"][key.lower()] = value_type(value)
             elif key in [
                 "N_SMC",
+            ]:
+                smc_options["n"] = value_type(value)
+            elif key in [
                 "SMC_METHOD",
             ]:
                 ei_options[key.lower()] = value_type(value)
@@ -87,6 +105,8 @@ def initialize_optimization(env_options):
     # Set crit_optim_options in options
     if crit_optim_options:
         options["crit_optim_options"] = crit_optim_options
+    if smc_options:
+        ei_options["smc_options"] = smc_options
     if ei_options:
         options["ei_options"] = ei_options
 
@@ -98,17 +118,14 @@ def initialize_optimization(env_options):
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
 
-# Initialize storage
-xi_records = []
-history_records = []
 
 # Repetition Loop
 for i in idx_run_list:
+    rng = get_rng(i, n_runs_max)
+    options["ei_options"]["smc_options"]["rng"] = rng
+
     ni0 = options["n0_over_d"] * problem.input_dim
-    xi = gp.misc.designs.scale(
-        np.array(lhsmdu.sample(problem.input_dim, ni0, randomSeed=None).T),
-        problem.input_box,
-    )
+    xi = maximinlhs(problem.input_dim, ni0, problem.input_box, rng)
 
     if options["threshold_strategy"] == "None":
         model = gpc.Model_ConstantMeanMaternpML(
@@ -154,10 +171,6 @@ for i in idx_run_list:
             break
 
     # endfor
-
-    # Store the history of observations
-    history_records.append(eialgo.zi)
-    xi_records.append(eialgo.xi)
 
     # Prepare output directory
     i_output_path = os.path.join(options["output_dir"], "data_{}.npy".format(str(i)))
