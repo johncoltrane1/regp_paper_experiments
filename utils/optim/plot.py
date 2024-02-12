@@ -470,7 +470,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
         306,
         test_problem_snbo,
         100,
-        figsize=(3.0, 2.6)
+        figsize=figsize
     )
 
     plt.save(os.path.join(output_dir, test_problem_gpmp))
