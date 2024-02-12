@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from plotting_utils import plotter
 import os
 import sys
@@ -454,16 +455,22 @@ def get_snbo_path(root, test_problem, strategy):
 
     return os.path.join(root, output)
 
-plotter(
-    {
-        "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'dashed')],
-        "ConstantNew": [os.path.join(root_gpmp, test_problem_gpmp, "Constant"), ('blue', 'dashed')],
-        "NoneNew": [os.path.join(root_gpmp, test_problem_gpmp, "None"), ('green', 'dashed')],
-        "Concentration": [get_snbo_path(root_snbo, test_problem_snbo, "Concentration"), ('orange', 'solid')],
-        "Constant": [get_snbo_path(root_snbo, test_problem_snbo, "Constant"), ('blue', 'solid')],
-        "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('green', 'solid')],
-    },
-    306,
-    test_problem_snbo,
-    100,
-)
+def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output_dir, figsize=(3.0, 2.6)):
+    root_snbo = os.path.join(root_snbo, get_snbo_informations()[test_problem_snbo][2])
+
+    plotter(
+        {
+            "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'dashed')],
+            "ConstantNew": [os.path.join(root_gpmp, test_problem_gpmp, "Constant"), ('blue', 'dashed')],
+            "NoneNew": [os.path.join(root_gpmp, test_problem_gpmp, "None"), ('green', 'dashed')],
+            "Concentration": [get_snbo_path(root_snbo, test_problem_snbo, "Concentration"), ('orange', 'solid')],
+            "Constant": [get_snbo_path(root_snbo, test_problem_snbo, "Constant"), ('blue', 'solid')],
+            "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('green', 'solid')],
+        },
+        306,
+        test_problem_snbo,
+        100,
+        figsize=(3.0, 2.6)
+    )
+
+    plt.save(os.path.join(output_dir, test_problem_gpmp))
