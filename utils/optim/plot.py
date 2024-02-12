@@ -4,37 +4,38 @@ import os
 import sys
 import importlib
 
+
 test_cases = [
-    ["branin", "Branin"]
-    ["threehumpcamelback", "ThreeHumpCamelBack"]
-    ["camel_back", "CamelBack"]
-    ["hartman3", "Hartman3"]
-    ["hartman6", "Hartman6"]
-    ["ackley4", "Ackley_4"]
-    ["ackley6", "Ackley_6"]
-    ["ackley10", "Ackley_10"]
-    ["rosenbrock4", "Rosenbrock_4"]
-    ["rosenbrock6", "Rosenbrock_6"]
-    ["rosenbrock10", "Rosenbrock_10"]
-    ["shekel5", "Shekel5"]
-    ["shekel7", "Shekel7"]
-    ["shekel10", "Shekel10"]
-    ["goldsteinprice", "GoldsteinPrice"]
-    ["goldstein_price_log", "GoldsteinPriceLog"]
-    ["crossintray", "CrossInTray"]
-    ["beale", "Beale"]
-    ["dixon_price4", "DixonPrice_4"]
-    ["dixon_price6", "DixonPrice_6"]
-    ["dixon_price10", "DixonPrice_10"]
-    ["perm4", "Perm_4"]
-    ["perm6", "Perm_6"]
-    ["perm10", "Perm_10"]
-    ["michalewicz4", "Michalewicz_4"]
-    ["michalewicz6", "Michalewicz_6"]
-    ["michalewicz10", "Michalewicz_10"]
-    ["zakharov4", "Zakharov_4"]
-    ["zakharov6", "Zakharov_6"]
-    ["zakharov10", "Zakharov_10"]
+    ["branin", "Branin"],
+    ["threehumpcamelback", "ThreeHumpCamelBack"],
+    ["camel_back", "CamelBack"],
+    ["hartman3", "Hartman3"],
+    ["hartman6", "Hartman6"],
+    ["ackley4", "Ackley_4"],
+    ["ackley6", "Ackley_6"],
+    ["ackley10", "Ackley_10"],
+    ["rosenbrock4", "Rosenbrock_4"],
+    ["rosenbrock6", "Rosenbrock_6"],
+    ["rosenbrock10", "Rosenbrock_10"],
+    ["shekel5", "Shekel5"],
+    ["shekel7", "Shekel7"],
+    ["shekel10", "Shekel10"],
+    ["goldsteinprice", "GoldsteinPrice"],
+    ["goldstein_price_log", "GoldsteinPriceLog"],
+    ["crossintray", "CrossInTray"],
+    ["beale", "Beale"],
+    ["dixon_price4", "DixonPrice_4"],
+    ["dixon_price6", "DixonPrice_6"],
+    ["dixon_price10", "DixonPrice_10"],
+    ["perm4", "Perm_4"],
+    ["perm6", "Perm_6"],
+    ["perm10", "Perm_10"],
+    ["michalewicz4", "Michalewicz_4"],
+    ["michalewicz6", "Michalewicz_6"],
+    ["michalewicz10", "Michalewicz_10"],
+    ["zakharov4", "Zakharov_4"],
+    ["zakharov6", "Zakharov_6"],
+    ["zakharov10", "Zakharov_10"],
 ]
 
 def get_snbo_informations():
