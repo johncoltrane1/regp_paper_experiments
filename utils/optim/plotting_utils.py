@@ -175,6 +175,7 @@ def plotter(
         max_f_evals,
         test_function,
         n_runs,
+        figsize=(3.0, 2.6)
     ):
     """
     palette is a dict like: {"Concentration": [path, ("green", "solid")], ...}
@@ -188,7 +189,7 @@ def plotter(
     averages = {k: get_format_data(palette[k][0], targets, max_f_evals, n_runs)[1] for k in palette.keys()}
     props = {k: get_format_data(palette[k][0], targets, max_f_evals, n_runs)[0] for k in palette.keys()}
 
-    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(3.0, 2.6))
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=figsize)
     ax1, ax2 = ax
 
     plt.suptitle(get_test_function_format(test_function))
