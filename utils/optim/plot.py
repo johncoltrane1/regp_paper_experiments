@@ -507,3 +507,13 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
     )
 
     plt.save(os.path.join(output_dir, test_problem_gpmp))
+
+for test_case in test_cases:
+    plot_case(
+        test_case[0],
+        test_case[1],
+        root_gpmp,
+        root_snbo,
+        output_dir,
+        figsize=(3.0, 2.6)
+    )
