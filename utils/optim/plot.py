@@ -457,12 +457,12 @@ def get_snbo_informations():
     }
 
 def get_snbo_path(root, test_problem, strategy):
-    sys.path.append(root)
+    sys.path.append(root[0])
 
     output = None
 
-    for _d in os.listdir(root):
-        module_loc = '{}.config'.format(_d)
+    for _d in os.listdir(os.path.join(root[0], root[1])):
+        module_loc = '{}.{}.config'.format(root[1], _d)
 
         importlib.util.spec_from_file_location(module_loc)
         experiment = importlib.import_module(module_loc).method_args
@@ -488,10 +488,10 @@ def get_snbo_path(root, test_problem, strategy):
                     assert output is None
                     output = _d
 
-    return os.path.join(root, output)
+    return os.path.join(root[0], root[1], output)
 
 def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output_dir, figsize=(3.0, 2.6)):
-    root_snbo = os.path.join(root_snbo, get_snbo_informations()[test_problem_snbo][2])
+    root_snbo = [root_snbo, get_snbo_informations()[test_problem_snbo][2]]
 
     plotter(
         {
