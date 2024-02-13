@@ -492,6 +492,10 @@ def get_snbo_path(root, test_problem, strategy):
 def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output_dir, figsize=(3.0, 2.6)):
     root_snbo = [root_snbo, get_snbo_informations()[test_problem_snbo][2]]
 
+    problem_path = os.path.join(output_dir, test_problem_gpmp)
+    if not os.path.exists(problem_path):
+        os.mkdir(problem_path)
+
     plotter(
         {
             "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'dashed')],
@@ -507,7 +511,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
         figsize=figsize
     )
 
-    plt.savefig(os.path.join(output_dir, test_problem_gpmp, "averages.pdf"))
+    plt.savefig(os.path.join(problem_path, "averages.pdf"))
 
     plot_termination(
         {
@@ -523,7 +527,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
         figsize=figsize
     )
 
-    plt.savefig(os.path.join(output_dir, test_problem_gpmp, "termination.pdf"))
+    plt.savefig(os.path.join(problem_path, "termination.pdf"))
 
 for test_case in test_cases:
     plot_case(
