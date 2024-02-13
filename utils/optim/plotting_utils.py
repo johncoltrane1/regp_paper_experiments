@@ -294,6 +294,7 @@ def plot_termination(
     #plt.show()
 
 def print_excecution_time(data_dir):
+    print("")
     for strategy in ["None", "Constant", "Concentration"]:
         exec_times = []
         for i in range(100):
@@ -303,7 +304,7 @@ def print_excecution_time(data_dir):
 
             exec_times.append(data.sum())
 
-        print("Strategy: {}; Execution time (seconds): Min={:.2g}, Median={:.2g}, Max={:.2g}".format(
+        print("Strategy: {:<13}; Execution time (seconds): Min={:.3g}, Median={:.3g}, Max={:.3g}".format(
                 strategy,
                 min(exec_times),
                 np.quantile(exec_times, 0.5),
