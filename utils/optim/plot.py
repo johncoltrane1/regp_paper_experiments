@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from plotting_utils import plotter, plot_termination
+from plotting_utils import plotter, plot_termination, print_excecution_time
 import os
 import sys
 import importlib
@@ -528,6 +528,8 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
     )
 
     plt.savefig(os.path.join(problem_path, "termination.pdf"))
+
+    print_excecution_time(os.path.join(root_gpmp, test_problem_gpmp))
 
 for test_case in test_cases:
     plot_case(

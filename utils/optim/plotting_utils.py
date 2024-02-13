@@ -183,9 +183,6 @@ def plotter(
 
     x_array, targets = get_spatial_quantiles_targets(test_function)
 
-    print(x_array)
-    print(targets)
-
     averages = {k: get_format_data(palette[k][0], targets, max_f_evals, n_runs)[1] for k in palette.keys()}
     props = {k: get_format_data(palette[k][0], targets, max_f_evals, n_runs)[0] for k in palette.keys()}
 
@@ -295,3 +292,21 @@ def plot_termination(
     plt.tight_layout()
 
     #plt.show()
+
+def print_excecution_time(data_dir):
+    for strategy in ["None", "Constant", "Concentration"]:
+        exec_times = []
+        for i in range(100):
+            sub_path = os.path.join(data_dir, strategy, 'times_{}.npy'.format(i))
+
+            data = np.load(sub_path)
+
+            exec_times.append(data.sum())
+
+        print("Strategy: {}; Execution time (seconds): Min={:.2g}, Median={:.2g}, Max={:.2g}".format(
+                strategy,
+                min(exec_times),
+                np.quantile(exec_times, 0.5),
+                max(exec_times)
+            )
+        )
