@@ -257,3 +257,41 @@ def plot_cummin(
     plt.tight_layout()
 
     #plt.show()
+
+def plot_termination(
+        palette,
+        test_function,
+        n_runs,
+        figsize=(3.0, 2.6)
+    ):
+    """
+    palette is a dict like: {"Concentration": [path, ("green", "v")], ...}
+    """
+
+    x_array, targets = get_spatial_quantiles_targets(test_function)
+
+    data = {k: fetch_data(palette[k][0], n_runs) for k in palette.keys()}
+
+    plt.figure(figsize=figsize)
+
+    plt.title(get_test_function_format(test_function))
+
+    for k in data.keys():
+        data_k = data[k]
+        min_quantile = []
+        for tmp in data_k:
+            tmp_min = tmp.min()
+            first_non_reached_quantile_idx = 0
+            for i in range(len(targets)):
+                if tmp_min <= targets[i]:
+                    first_non_reached_quantile_idx = i
+            min_quantile.append(x_array[first_non_reached_quantile_idx])
+
+        plt.plot([tmp.shape[0] for tmp in data_k], min_quantile, label=k, marker=palette[k][1][1], color=palette[k][1][0], linestyle='None')
+        plt.semilogy()
+
+    plt.legend()
+
+    plt.tight_layout()
+
+    #plt.show()
