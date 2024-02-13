@@ -1,9 +1,8 @@
 import matplotlib.pyplot as plt
-from plotting_utils import plotter
+from plotting_utils import plotter, plot_termination
 import os
 import sys
 import importlib
-
 
 
 test_cases = [
@@ -508,7 +507,23 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
         figsize=figsize
     )
 
-    plt.savefig(os.path.join(output_dir, test_problem_gpmp + ".pdf"))
+    plt.savefig(os.path.join(output_dir, test_problem_gpmp, "averages.pdf"))
+
+    plot_termination(
+        {
+            "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'v')],
+            "ConstantNew": [os.path.join(root_gpmp, test_problem_gpmp, "Constant"), ('blue', 'v')],
+            "NoneNew": [os.path.join(root_gpmp, test_problem_gpmp, "None"), ('green', 'v')],
+            "Concentration": [get_snbo_path(root_snbo, test_problem_snbo, "Concentration"), ('orange', '2')],
+            "Constant": [get_snbo_path(root_snbo, test_problem_snbo, "Constant"), ('blue', '2')],
+            "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('green', '2')],
+        },
+        test_problem_snbo,
+        100,
+        figsize=figsize
+    )
+
+    plt.savefig(os.path.join(output_dir, test_problem_gpmp, "termination.pdf"))
 
 for test_case in test_cases:
     plot_case(
@@ -517,5 +532,5 @@ for test_case in test_cases:
         root_gpmp,
         root_snbo,
         output_dir,
-        figsize=(3.0, 2.6)
+        figsize=(6.0, 5.2)
     )
