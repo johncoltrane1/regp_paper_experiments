@@ -4,7 +4,6 @@ import os
 import sys
 import importlib
 
-
 test_cases = [
     ["branin", "Branin"],
     ["threehumpcamelback", "ThreeHumpCamelBack"],
@@ -529,6 +528,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
 
     plt.savefig(os.path.join(problem_path, "termination.pdf"))
 
+    print("Test problem: {}".format(test_problem_gpmp))
     print_excecution_time(os.path.join(root_gpmp, test_problem_gpmp))
 
 for test_case in test_cases:
