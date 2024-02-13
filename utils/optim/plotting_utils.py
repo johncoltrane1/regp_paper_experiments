@@ -231,7 +231,7 @@ def plotter(
 
     plt.tight_layout()
 
-    plt.show()
+    #plt.show()
 
 def plot_cummin(
         palette,
@@ -256,4 +256,4 @@ def plot_cummin(
 
     plt.tight_layout()
 
-    plt.show()
+    #plt.show()

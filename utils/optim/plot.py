@@ -5,6 +5,7 @@ import sys
 import importlib
 
 
+
 test_cases = [
     ["branin", "Branin"],
     ["threehumpcamelback", "ThreeHumpCamelBack"],
@@ -507,7 +508,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
         figsize=figsize
     )
 
-    plt.save(os.path.join(output_dir, test_problem_gpmp))
+    plt.savefig(os.path.join(output_dir, test_problem_gpmp + ".pdf"))
 
 for test_case in test_cases:
     plot_case(
