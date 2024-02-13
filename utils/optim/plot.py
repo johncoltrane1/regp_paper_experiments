@@ -515,6 +515,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
     )
 
     plt.savefig(os.path.join(problem_path, "averages.pdf"))
+    plt.close()
 
     plot_termination(
         {
@@ -531,6 +532,7 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
     )
 
     plt.savefig(os.path.join(problem_path, "termination.pdf"))
+    plt.close()
 
     print("\nTest problem: {}".format(test_problem_gpmp))
     print_excecution_time(os.path.join(root_gpmp, test_problem_gpmp))
