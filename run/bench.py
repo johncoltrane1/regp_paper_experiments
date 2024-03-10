@@ -157,6 +157,8 @@ def store(step_ind, algo):
     loo_tcrps_array[step_ind] = algo.models[0]["info"]["loo_tCRPS_final"]
     loo_tcrps_list_array[step_ind, :] = np.array(algo.models[0]["info"]["loo_tCRPS_list"])
 
+    cond_K_array[step_ind] = algo.models[0]["info"]["cond_K"]
+
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
 
@@ -173,6 +175,8 @@ meanparam_array = np.zeros([nb_models])
 t0_array = np.zeros([nb_models])
 t_list_array = np.zeros([nb_models, 10])
 t_array = np.zeros([nb_models])
+
+cond_K_array = np.zeros([nb_models])
 
 # Repetition Loop
 for i in idx_run_list:
@@ -268,3 +272,5 @@ for i in idx_run_list:
 
     np.save(os.path.join(debugging_path, "loo_tcrps_array"), loo_tcrps_array)
     np.save(os.path.join(debugging_path, "loo_tcrps_list_array"), loo_tcrps_list_array)
+
+    np.save(os.path.join(debugging_path, "cond_K_array"), cond_K_array)
