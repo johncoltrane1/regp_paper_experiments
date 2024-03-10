@@ -160,18 +160,19 @@ def store(step_ind, algo):
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
 
-loo_tcrps_array = np.zeros([options["n_iterations"]])
-loo_tcrps_list_array = np.zeros([options["n_iterations"], 10])
+nb_models = options["n_iterations"] + 1
+loo_tcrps_array = np.zeros([nb_models])
+loo_tcrps_list_array = np.zeros([nb_models, 10])
 
-covparam_list_array = np.zeros([options["n_iterations"], 10, problem.input_dim + 1])
-meanparam_list_array = np.zeros([options["n_iterations"], 10])
+covparam_list_array = np.zeros([nb_models, 10, problem.input_dim + 1])
+meanparam_list_array = np.zeros([nb_models, 10])
 
-covparam_array = np.zeros([options["n_iterations"], problem.input_dim + 1])
-meanparam_array = np.zeros([options["n_iterations"]])
+covparam_array = np.zeros([nb_models, problem.input_dim + 1])
+meanparam_array = np.zeros([nb_models])
 
-t0_array = np.zeros([options["n_iterations"]])
-t_list_array = np.zeros([options["n_iterations"], 10])
-t_array = np.zeros([options["n_iterations"]])
+t0_array = np.zeros([nb_models])
+t_list_array = np.zeros([nb_models, 10])
+t_array = np.zeros([nb_models])
 
 # Repetition Loop
 for i in idx_run_list:
