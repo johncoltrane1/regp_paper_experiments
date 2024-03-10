@@ -144,6 +144,18 @@ def get_algo(problem, model, options):
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
 
+loo_tcrps_array = np.zeros([options["n_iterations"]])
+loo_tcrps_list_array = np.zeros([options["n_iterations"], 10])
+
+covparam_list_array = np.zeros([options["n_iterations"], 10, problem.input_dim + 1])
+meanparam_list_array = np.zeros([options["n_iterations"], 10])
+
+covparam_array = np.zeros([options["n_iterations"], problem.input_dim + 1])
+meanparam_array = np.zeros([options["n_iterations"]])
+
+t0_array = np.zeros([options["n_iterations"]])
+t_list_array = np.zeros([options["n_iterations"], 10])
+t_array = np.zeros([options["n_iterations"]])
 
 # Repetition Loop
 for i in idx_run_list:
@@ -195,6 +207,19 @@ for i in idx_run_list:
         try:
             algo.step()
             times_records.append(algo.training_time)
+
+            t0_array[step_ind] = algo.models[0]["info"]["G"][1]
+            t_list_array[step_ind, :] = np.array([l[0][0] for l in algo.models[0]["info"]["R_list"]])
+            t_array[step_ind] = algo.models[0]["R"][0][0]
+
+            covparam_list_array[step_ind, :, :] = np.array([np.array(l) for l in algo.models[0]["info"]["covparam_list"]])
+            meanparam_list_array[step_ind, :] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam_list"]]).flatten()
+
+            covparam_array[step_ind, :] = np.array(algo.models[0]["info"]["covparam"])
+            meanparam_array[step_ind] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam"]]).flatten()
+
+            loo_tcrps_array[step_ind] = algo.models[0]["info"]["loo_tCRPS_final"]
+            loo_tcrps_list_array[step_ind, :] = np.array(algo.models[0]["info"]["loo_tCRPS_list"])
         except gp.num.GnpLinalgError as e:
             i_error_path = os.path.join(options["output_dir"], str(i))
             os.mkdir(i_error_path)
@@ -216,3 +241,22 @@ for i in idx_run_list:
     # Save data
     np.save(i_output_path, np.hstack((algo.xi, algo.zi)))
     np.save(i_times_path, np.array(times_records))
+
+    # Save debugging data
+    debugging_path = os.path.join(options["output_dir"], "debugging_{}".format(str(i)))
+
+    if not os.path.exists(debugging_path):
+        os.mkdir(debugging_path)
+
+    np.save(os.path.join(debugging_path, "t0_array"), t0_array)
+    np.save(os.path.join(debugging_path, "t_list_array"), t_list_array)
+    np.save(os.path.join(debugging_path, "t_array"), t_array)
+
+    np.save(os.path.join(debugging_path, "covparam_list_array"), covparam_list_array)
+    np.save(os.path.join(debugging_path, "meanparam_list_array"), meanparam_list_array)
+
+    np.save(os.path.join(debugging_path, "covparam_array"), covparam_array)
+    np.save(os.path.join(debugging_path, "meanparam_array"), meanparam_array)
+
+    np.save(os.path.join(debugging_path, "loo_tcrps_array"), loo_tcrps_array)
+    np.save(os.path.join(debugging_path, "loo_tcrps_list_array"), loo_tcrps_list_array)
