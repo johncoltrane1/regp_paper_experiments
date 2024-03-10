@@ -141,6 +141,22 @@ def get_algo(problem, model, options):
     algo.force_param_initial_guess = True
     return algo
 
+# Logging
+def store(step_ind, algo):
+    t0_array[step_ind] = algo.models[0]["info"]["G"][1]
+    t_list_array[step_ind, :] = np.array([l[0][0] for l in algo.models[0]["info"]["R_list"]])
+    t_array[step_ind] = algo.models[0]["R"][0][0]
+
+    covparam_list_array[step_ind, :, :] = np.array([np.array(l) for l in algo.models[0]["info"]["covparam_list"]])
+    meanparam_list_array[step_ind, :] = np.array(
+        [np.array(l) for l in algo.models[0]["info"]["meanparam_list"]]).flatten()
+
+    covparam_array[step_ind, :] = np.array(algo.models[0]["info"]["covparam"])
+    meanparam_array[step_ind] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam"]]).flatten()
+
+    loo_tcrps_array[step_ind] = algo.models[0]["info"]["loo_tCRPS_final"]
+    loo_tcrps_list_array[step_ind, :] = np.array(algo.models[0]["info"]["loo_tCRPS_list"])
+
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
 
@@ -199,6 +215,8 @@ for i in idx_run_list:
     algo.set_initial_design(xi=xi)
     times_records.append(algo.training_time)
 
+    store(0, algo)
+
     # Optimization loop
     for step_ind in range(options["n_iterations"]):
         print(f"\niter {step_ind}")
@@ -208,18 +226,7 @@ for i in idx_run_list:
             algo.step()
             times_records.append(algo.training_time)
 
-            t0_array[step_ind] = algo.models[0]["info"]["G"][1]
-            t_list_array[step_ind, :] = np.array([l[0][0] for l in algo.models[0]["info"]["R_list"]])
-            t_array[step_ind] = algo.models[0]["R"][0][0]
-
-            covparam_list_array[step_ind, :, :] = np.array([np.array(l) for l in algo.models[0]["info"]["covparam_list"]])
-            meanparam_list_array[step_ind, :] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam_list"]]).flatten()
-
-            covparam_array[step_ind, :] = np.array(algo.models[0]["info"]["covparam"])
-            meanparam_array[step_ind] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam"]]).flatten()
-
-            loo_tcrps_array[step_ind] = algo.models[0]["info"]["loo_tCRPS_final"]
-            loo_tcrps_list_array[step_ind, :] = np.array(algo.models[0]["info"]["loo_tCRPS_list"])
+            store(step_ind+1, algo)
         except gp.num.GnpLinalgError as e:
             i_error_path = os.path.join(options["output_dir"], str(i))
             os.mkdir(i_error_path)
