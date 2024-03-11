@@ -142,7 +142,15 @@ def get_algo(problem, model, options):
     return algo
 
 # Logging
-def store(step_ind, algo):
+def store(step_ind, algo, strategy):
+    covparam_array[step_ind, :] = np.array(algo.models[0]["info"]["covparam"])
+    meanparam_array[step_ind] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam"]]).flatten()
+
+    cond_K_array[step_ind] = algo.models[0]["info"]["cond_K"]
+
+    if strategy == "None":
+        return
+
     t0_array[step_ind] = algo.models[0]["info"]["G"][1]
     t_list_array[step_ind, :] = np.array([l[0][0] for l in algo.models[0]["info"]["R_list"]])
     t_array[step_ind] = algo.models[0]["R"][0][0]
@@ -151,13 +159,8 @@ def store(step_ind, algo):
     meanparam_list_array[step_ind, :] = np.array(
         [np.array(l) for l in algo.models[0]["info"]["meanparam_list"]]).flatten()
 
-    covparam_array[step_ind, :] = np.array(algo.models[0]["info"]["covparam"])
-    meanparam_array[step_ind] = np.array([np.array(l) for l in algo.models[0]["info"]["meanparam"]]).flatten()
-
     loo_tcrps_array[step_ind] = algo.models[0]["info"]["loo_tCRPS_final"]
     loo_tcrps_list_array[step_ind, :] = np.array(algo.models[0]["info"]["loo_tCRPS_list"])
-
-    cond_K_array[step_ind] = algo.models[0]["info"]["cond_K"]
 
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
@@ -220,7 +223,7 @@ for i in idx_run_list:
     algo.set_initial_design(xi=xi)
     times_records.append(algo.training_time)
 
-    store(0, algo)
+    store(0, algo, options["threshold_strategy"])
 
     # Optimization loop
     for step_ind in range(options["n_iterations"]):
@@ -231,7 +234,7 @@ for i in idx_run_list:
             algo.step()
             times_records.append(algo.training_time)
 
-            store(step_ind+1, algo)
+            store(step_ind+1, algo, options["threshold_strategy"])
         except gp.num.GnpLinalgError as e:
             i_error_path = os.path.join(options["output_dir"], str(i))
             os.mkdir(i_error_path)
