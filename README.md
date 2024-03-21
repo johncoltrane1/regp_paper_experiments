@@ -27,8 +27,8 @@ pip3 install -e gpmp-contrib
 
 ## Run benchmarks
 
-The script for launching slurm is `run_ego.sh`. E.g.,
+The script for launching slurm is `run_ego_allmethods.sh`. E.g.,
 ```
-bash run_ego.sh concentration_run goldsteinprice Concentration 30
+bash run_ego_allmethods.sh goldsteinprice 30 EI
 ```
-This launchs 30 repetitions of the "Concentration" heuristic on the Goldstein-Price function. Results and logs are written in `concentration_run`.
+This launchs 30 repetitions of the Expected improvement algorithm with the "Concentration", "Spatial", "Constant", and "None" heuristics on the Goldstein-Price function. Results and logs are written in `results`. Other possible algorithms are "straddle" and UCB with, for instance, "UCB10" for q = 0.1. For straddle, another arg specifying the threshold must be provided.

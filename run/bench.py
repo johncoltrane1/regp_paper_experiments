@@ -19,11 +19,11 @@ n_runs_max = 1000
 env_options = {
     "ALGO": ("EI", str),
     "OUTPUT_DIR": ("output", str),
-    "N_ITERATIONS": (300, int),
+    "N_EVALUATIONS": (300, int),
     "SLURM_ARRAY_TASK_ID": (None, int),
     "N_RUNS": (1, int),
     "PROBLEM": ("goldsteinprice", str),
-    "N0_OVER_D": (3, int),
+    "N0_OVER_D": (10, int),
     "STRATEGY": ("None", str),
     "Q_STRATEGY": (0.25, float),
     "CRIT_OPT_METHOD": ("SLSQP", str),
@@ -225,8 +225,11 @@ for i in idx_run_list:
 
     store(0, algo, options["threshold_strategy"])
 
+    n_iterations = options["n_evaluations"] - ni0
+    assert n_iterations > 0
+
     # Optimization loop
-    for step_ind in range(options["n_iterations"]):
+    for step_ind in range(n_iterations):
         print(f"\niter {step_ind}")
 
         # Run a step of the algorithm
