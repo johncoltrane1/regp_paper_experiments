@@ -19,11 +19,11 @@ n_runs_max = 1000
 # Settings default values and types for different options
 env_options = {
     "OUTPUT_DIR": ("output", str),
-    "N_ITERATIONS": (300, int),
+    "N_EVALUATIONS": (300, int),
     "SLURM_ARRAY_TASK_ID": (None, int),
     "N_RUNS": (1, int),
     "PROBLEM": ("goldsteinprice", str),
-    "N0_OVER_D": (3, int),
+    "N0_OVER_D": (10, int),
     "STRATEGY": ("None", str),
     "Q_STRATEGY": (0.25, float),
     "CRIT_OPT_METHOD": ("SLSQP", str),
@@ -132,6 +132,8 @@ for i in idx_run_list:
             "GP_bench_{}".format(options["problem"]),
             output_dim=problem.output_dim,
             covariance_params={"p": 2},
+            rng=rng,
+            box=problem.input_box
         )
     else:
         model = gpc.Model_ConstantMeanMaternp_reGP(
@@ -140,6 +142,8 @@ for i in idx_run_list:
             crit_optim_options=options["crit_optim_options"],
             output_dim=problem.output_dim,
             covariance_params={"p": 2},
+            rng=rng,
+            box=problem.input_box
         )
 
     times_records = []
@@ -150,8 +154,11 @@ for i in idx_run_list:
     eialgo.set_initial_design(xi=xi)
     times_records.append(eialgo.training_time)
 
+    n_iterations = options["n_evaluations"] - ni0
+    assert n_iterations > 0
+
     # Optimization loop
-    for step_ind in range(options["n_iterations"]):
+    for step_ind in range(n_iterations):
         print(f"\niter {step_ind}")
 
         # Run a step of the algorithm
