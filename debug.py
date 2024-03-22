@@ -1,8 +1,10 @@
 import os
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-root = "/Users/sebastien/results_debug/EI/rosenbrock10"
+root = "C:\\Users\\PETIT\\data\\run_2024_03_05\\results_debug\\EI\\rosenbrock10"
 
 strategies = ["Constant", "Concentration", "Spatial", "None"]
 
@@ -138,13 +140,13 @@ file_name = "t_array.npy"
 for strategy in ["Constant", "Concentration", "Spatial"]:
     data = []
     for i in range(n_runs):
-        t0 = data_getter(root, strategy, i, file_name)
+        t = data_getter(root, strategy, i, file_name)
         zi = np.load(os.path.join(root, strategy, "data_{}.npy".format(i)))[:, -1]
 
         datum = []
         for j in range(300):
             datum.append(
-                (zi[:(30 + j)] <= t0[j]).mean()
+                (zi[:(30 + j)] <= t[j]).mean()
             )
 
         data.append(datum)
@@ -159,3 +161,69 @@ plt.semilogy()
 plt.title("Frac. of points below t")
 
 plt.show()
+
+####
+
+plt.figure()
+
+file_name = "t_array.npy"
+strategy = "Constant"
+
+data = []
+for i in range(n_runs):
+    t = data_getter(root, strategy, i, file_name)
+    zi = np.load(os.path.join(root, strategy, "data_{}.npy".format(i)))[:, -1]
+
+    datum = []
+    for j in range(300):
+        datum.append(
+            (zi[:(30 + j)] <= t[j]).mean()
+        )
+
+    plt.plot(datum)
+
+plt.legend()
+plt.semilogy()
+
+plt.title("Frac. of points below t")
+
+plt.show()
+
+####
+
+plt.figure()
+
+file_name = "loo_tcrps_array.npy"
+strategy = "Constant"
+
+data = []
+for i in range(n_runs):
+    datum = data_getter(root, strategy, i, file_name)
+    plt.plot(datum)
+
+plt.legend()
+plt.semilogy()
+
+plt.title("LOO-tCRPS")
+
+plt.show()
+
+####
+
+plt.figure()
+
+file_name = "loo_tcrps_list_array.npy"
+strategy = "Constant"
+
+data = []
+for i in range(n_runs):
+    datum = data_getter(root, strategy, i, file_name)
+    plt.plot(datum[:, 0], "k-")
+    plt.plot(datum[:, -1], "b-")
+
+plt.semilogy()
+
+plt.title("LOO-tCRPS")
+
+plt.show()
+
