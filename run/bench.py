@@ -165,22 +165,6 @@ def store(step_ind, algo, strategy):
 # --------------------------------------------------------------------------------------
 problem, options, idx_run_list = initialize_optimization(env_options)
 
-nb_models = options["n_iterations"] + 1
-loo_tcrps_array = np.zeros([nb_models])
-loo_tcrps_list_array = np.zeros([nb_models, 10])
-
-covparam_list_array = np.zeros([nb_models, 10, problem.input_dim + 1])
-meanparam_list_array = np.zeros([nb_models, 10])
-
-covparam_array = np.zeros([nb_models, problem.input_dim + 1])
-meanparam_array = np.zeros([nb_models])
-
-t0_array = np.zeros([nb_models])
-t_list_array = np.zeros([nb_models, 10])
-t_array = np.zeros([nb_models])
-
-cond_K_array = np.zeros([nb_models])
-
 # Repetition Loop
 for i in idx_run_list:
     rng = get_rng(i, n_runs_max)
@@ -215,6 +199,24 @@ for i in idx_run_list:
             rng=rng,
             box=problem.input_box
         )
+
+    #
+    nb_models = options["n_evaluations"] - ni0 + 1
+    loo_tcrps_array = np.zeros([nb_models])
+    loo_tcrps_list_array = np.zeros([nb_models, 10])
+
+    covparam_list_array = np.zeros([nb_models, 10, problem.input_dim + 1])
+    meanparam_list_array = np.zeros([nb_models, 10])
+
+    covparam_array = np.zeros([nb_models, problem.input_dim + 1])
+    meanparam_array = np.zeros([nb_models])
+
+    t0_array = np.zeros([nb_models])
+    t_list_array = np.zeros([nb_models, 10])
+    t_array = np.zeros([nb_models])
+
+    cond_K_array = np.zeros([nb_models])
+    #
 
     times_records = []
 
