@@ -4,11 +4,12 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-root = "C:\\Users\\PETIT\\data\\run_2024_03_05\\results_debug\\EI\\rosenbrock10"
+root = "C:\\Users\\PETIT\\data\\run_2024_03_23\\results\\EI\\rosenbrock10"
 
 strategies = ["Constant", "Concentration", "Spatial", "None"]
 
 n_runs = 30
+n0 = 30
 
 def data_getter(root, strategy, i, file_name):
     path = os.path.join(root, strategy, "debugging_{}".format(i), file_name)
@@ -95,7 +96,7 @@ for strategy in ["Constant", "Concentration", "Spatial"]:
         datum = []
         for j in range(300):
             datum.append(
-                (zi[:(30 + j)] <= t0[j]).mean()
+                (zi[:(n0 + j)] <= t0[j]).mean()
             )
 
         data.append(datum)
@@ -146,7 +147,7 @@ for strategy in ["Constant", "Concentration", "Spatial"]:
         datum = []
         for j in range(300):
             datum.append(
-                (zi[:(30 + j)] <= t[j]).mean()
+                (zi[:(n0 + j)] <= t[j]).mean()
             )
 
         data.append(datum)
@@ -177,7 +178,7 @@ for i in range(n_runs):
     datum = []
     for j in range(300):
         datum.append(
-            (zi[:(30 + j)] <= t[j]).mean()
+            (zi[:(n0 + j)] <= t[j]).mean()
         )
 
     plt.plot(datum)
