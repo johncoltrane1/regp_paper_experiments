@@ -102,7 +102,7 @@ def initialize_optimization(env_options):
                 algo_options[key.lower()] = value_type(value)
             elif key == "ALGO":
                 options["algo"] = value
-                if options["algo"] in ["straddle"]:
+                if options["algo"] in ["straddle", "straddlelog"]:
                     options["task"] = "levelset"
                 else:
                     options["task"] = "optim"
@@ -141,6 +141,11 @@ def get_algo(problem, model, options):
     if algo_name == "EI":
         import gpmpcontrib.optim.expectedimprovement as ei
         algo = ei.ExpectedImprovement(problem, model, options=options["algo_options"])
+    elif algo_name[:6] == "UCBLOG":
+        q_UCBLOG = 0.01 * float(algo_name[6:])
+        print("UCBLOG quantile: {}".format(q_UCBLOG))
+        import gpmpcontrib.optim.ucb_log as ucb_log
+        algo = ucb_log.UCBLOG(q_UCBLOG, problem, model, options=options["algo_options"])
     elif algo_name[:3] == "UCB":
         q_UCB = 0.01 * float(algo_name[3:])
         print("UCB quantile: {}".format(q_UCB))
@@ -150,6 +155,10 @@ def get_algo(problem, model, options):
         t = get_levelset_threshold(problem)
         import gpmpcontrib.levelset.straddle as straddle
         algo = straddle.Straddle(t, problem, model, options=options["algo_options"])
+    elif algo_name ==  "straddlelog":
+        t = get_levelset_threshold(problem)
+        import gpmpcontrib.levelset.straddle_log as straddle_log
+        algo = straddle_log.StraddleLog(t, problem, model, options=options["algo_options"])
     else:
         raise ValueError(algo_name)
 
