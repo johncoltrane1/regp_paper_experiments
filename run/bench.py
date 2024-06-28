@@ -102,7 +102,7 @@ def initialize_optimization(env_options):
                 algo_options[key.lower()] = value_type(value)
             elif key == "ALGO":
                 options["algo"] = value
-                if options["algo"] in ["straddle", "straddlelog"]:
+                if options["algo"] in ["straddle", "ambiguity"]:
                     options["task"] = "levelset"
                 else:
                     options["task"] = "optim"
@@ -155,10 +155,10 @@ def get_algo(problem, model, options):
         t = get_levelset_threshold(problem)
         import gpmpcontrib.levelset.straddle as straddle
         algo = straddle.Straddle(t, problem, model, options=options["algo_options"])
-    elif algo_name ==  "straddlelog":
+    elif algo_name ==  "ambiguity":
         t = get_levelset_threshold(problem)
-        import gpmpcontrib.levelset.straddle_log as straddle_log
-        algo = straddle_log.StraddleLog(t, problem, model, options=options["algo_options"])
+        import gpmpcontrib.levelset.ambiguity as ambiguity
+        algo = ambiguity.Ambiguity(t, problem, model, options=options["algo_options"])
     else:
         raise ValueError(algo_name)
 
