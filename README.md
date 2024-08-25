@@ -17,18 +17,18 @@ source ./regp/bin/activate
 pip3 install torch
 
 ## Install gmpm fork
-git clone -b regp_paper_experiments git@github.com:relaxedGP/gpmp.git
+git clone -b regp_paper_experiments https://github.com/relaxedGP/gpmp.git
 pip3 install -e gpmp
 
 ## Install gpmp-contrib fork
-git clone -b regp_paper_experiments git@github.com:relaxedGP/gpmp-contrib.git
+git clone -b regp_paper_experiments https://github.com/relaxedGP/gpmp-contrib.git
 pip3 install -e gpmp-contrib
 ```
 
 ## Run benchmarks
 
-The script for launching slurm is `run_ego_allmethods.sh`. E.g.,
+The script for launching slurm is `run_allmethods.sh`. E.g.,
 ```
-bash run_ego_allmethods.sh goldsteinprice 30
+bash run_allmethods.sh goldsteinprice 30 EI
 ```
-This launchs 30 repetitions of the "Concentration", "Spatial", "Constant", and "None" heuristics on the Goldstein-Price function. Results and logs are written in `results`.
+This launchs 30 repetitions of the Expected improvement algorithm with the "Concentration", "Spatial", "Constant", and "None" heuristics on the Goldstein-Price function. Results and logs are written in `results`. Other possible algorithms are "straddle" and UCB with, for instance, "UCB10" for q = 0.1.
