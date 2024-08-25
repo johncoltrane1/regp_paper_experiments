@@ -1,4 +1,13 @@
+import matplotlib
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
 import matplotlib.pyplot as plt
+
 from plotting_utils import plot_cummin
 import os
 import sys
@@ -495,26 +504,26 @@ def get_snbo_path(root, test_problem, strategy):
 def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output_dir):
     root_snbo = [root_snbo, get_snbo_informations()[test_problem_snbo][2]]
 
-    problem_path = os.path.join(output_dir, test_problem_gpmp)
+    problem_path = os.path.join(output_dir, "EI")
     if not os.path.exists(problem_path):
         os.mkdir(problem_path)
 
     plot_cummin(
         {
-            "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'dashed')],
+            "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('green', 'dashed')],
             "ConstantNew": [os.path.join(root_gpmp, test_problem_gpmp, "Constant"), ('blue', 'dashed')],
-            "NoneNew": [os.path.join(root_gpmp, test_problem_gpmp, "None"), ('green', 'dashed')],
-            "Concentration": [get_snbo_path(root_snbo, test_problem_snbo, "Concentration"), ('orange', 'solid')],
+            "NoneNew": [os.path.join(root_gpmp, test_problem_gpmp, "None"), ('red', 'dashed')],
+            "Concentration": [get_snbo_path(root_snbo, test_problem_snbo, "Concentration"), ('green', 'solid')],
             "Constant": [get_snbo_path(root_snbo, test_problem_snbo, "Constant"), ('blue', 'solid')],
-            "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('green', 'solid')],
+            "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('red', 'solid')],
         },
         300,
         test_problem_gpmp,
-        100,
+        30,
         10,
     )
 
-    plt.savefig(os.path.join(problem_path, "averages.pdf"))
+    plt.savefig(os.path.join(problem_path, "{}.pgf".format(test_problem_gpmp)))
     plt.close()
 
 for test_case in test_cases:

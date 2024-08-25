@@ -117,11 +117,21 @@ def get_spatial_quantiles_targets(test_function):
 def fetch_data(data_dir, n_runs):
     L = []
     for i in range(n_runs):
-        sub_path = os.path.join(data_dir, 'data_{}.npy'.format(i))
+        if os.path.exists(os.path.join(data_dir, str(i), "history.csv")):
+            sub_path = os.path.join(data_dir, str(i), "history.csv")
 
-        data = np.load(sub_path)[:, -1]
+            data = pd.read_csv(sub_path).values[:, -1]
 
-        L.append(data)
+            L.append(data)
+
+            if i >= 29:
+                break
+        else:
+            sub_path = os.path.join(data_dir, 'data_{}.npy'.format(i))
+
+            data = np.load(sub_path)[:, -1]
+
+            L.append(data)
 
     return L
 
@@ -282,7 +292,7 @@ def plot_cummin(
 
         # Plot
         abscissa = list(range(n0_over_dim * dim, max_f_evals))
-        ax1.fill_between(abscissa, lower_q, upper_q, color=palette[k][1][0], alpha=0.2)
+        # ax1.fill_between(abscissa, lower_q, upper_q, color=palette[k][1][0], alpha=0.2)
         ax1.plot(abscissa, med, label=k, linestyle=palette[k][1][1], color=palette[k][1][0])
 
     ax1.semilogy()
