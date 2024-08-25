@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from plotting_utils import plotter, plot_termination, print_excecution_time
+from plotting_utils import plot_cummin
 import os
 import sys
 import importlib
@@ -492,14 +492,14 @@ def get_snbo_path(root, test_problem, strategy):
 
     return os.path.join(root[0], root[1], output)
 
-def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output_dir, figsize=(3.0, 2.6)):
+def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output_dir):
     root_snbo = [root_snbo, get_snbo_informations()[test_problem_snbo][2]]
 
     problem_path = os.path.join(output_dir, test_problem_gpmp)
     if not os.path.exists(problem_path):
         os.mkdir(problem_path)
 
-    plotter(
+    plot_cummin(
         {
             "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'dashed')],
             "ConstantNew": [os.path.join(root_gpmp, test_problem_gpmp, "Constant"), ('blue', 'dashed')],
@@ -508,34 +508,14 @@ def plot_case(test_problem_gpmp, test_problem_snbo, root_gpmp, root_snbo, output
             "Constant": [get_snbo_path(root_snbo, test_problem_snbo, "Constant"), ('blue', 'solid')],
             "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('green', 'solid')],
         },
-        306,
-        test_problem_snbo,
+        300,
+        test_problem_gpmp,
         100,
-        figsize=figsize
+        10,
     )
 
     plt.savefig(os.path.join(problem_path, "averages.pdf"))
     plt.close()
-
-    plot_termination(
-        {
-            "ConcentrationNew": [os.path.join(root_gpmp, test_problem_gpmp, "Concentration"),('orange', 'v')],
-            "ConstantNew": [os.path.join(root_gpmp, test_problem_gpmp, "Constant"), ('blue', 'v')],
-            "NoneNew": [os.path.join(root_gpmp, test_problem_gpmp, "None"), ('green', 'v')],
-            "Concentration": [get_snbo_path(root_snbo, test_problem_snbo, "Concentration"), ('orange', '2')],
-            "Constant": [get_snbo_path(root_snbo, test_problem_snbo, "Constant"), ('blue', '2')],
-            "None": [get_snbo_path(root_snbo, test_problem_snbo, "None"), ('green', '2')],
-        },
-        test_problem_snbo,
-        100,
-        figsize=figsize
-    )
-
-    plt.savefig(os.path.join(problem_path, "termination.pdf"))
-    plt.close()
-
-    print("\nTest problem: {}".format(test_problem_gpmp))
-    print_excecution_time(os.path.join(root_gpmp, test_problem_gpmp))
 
 for test_case in test_cases:
     plot_case(
@@ -544,5 +524,4 @@ for test_case in test_cases:
         root_gpmp,
         root_snbo,
         output_dir,
-        figsize=(6.0, 5.2)
     )
